@@ -66,6 +66,7 @@ public class add_checklist_note {
                 parentMatcher.describeTo(description);
             }
 
+
             @Override
             public boolean matchesSafely(View view) {
                 ViewParent parent = view.getParent();
