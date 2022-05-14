@@ -8,10 +8,12 @@ import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static androidx.test.espresso.action.ViewActions.longClick;
 import static androidx.test.espresso.action.ViewActions.replaceText;
 import static androidx.test.espresso.action.ViewActions.scrollTo;
+import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withClassName;
 import static androidx.test.espresso.matcher.ViewMatchers.withContentDescription;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static androidx.test.espresso.matcher.ViewMatchers.withParent;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.anything;
@@ -43,6 +45,7 @@ public class move_note_to_trash {
 
     @Test
     public void move_note_to_trash() {
+
         ViewInteraction viewInteraction = onView(
                 allOf(withId(R.id.fab_expand_menu_button),
                         childAtPosition(
@@ -74,7 +77,7 @@ public class move_note_to_trash {
                                                 0)),
                                 1),
                         isDisplayed()));
-        editText.perform(replaceText("test"), closeSoftKeyboard());
+        editText.perform(replaceText("Test Note for Trash"), closeSoftKeyboard());
 
         ViewInteraction editText2 = onView(
                 allOf(withId(R.id.detail_content),
@@ -83,7 +86,7 @@ public class move_note_to_trash {
                                         withId(R.id.fragment_detail_content),
                                         1),
                                 0)));
-        editText2.perform(scrollTo(), replaceText("trash text"), closeSoftKeyboard());
+        editText2.perform(scrollTo(), replaceText("Note Description"), closeSoftKeyboard());
 
         ViewInteraction appCompatImageButton = onView(
                 allOf(withContentDescription("drawer open"),
@@ -96,16 +99,11 @@ public class move_note_to_trash {
                         isDisplayed()));
         appCompatImageButton.perform(click());
 
-        ViewInteraction frameLayout = onView(
-                allOf(withId(R.id.root),
-                        childAtPosition(
-                                allOf(withId(R.id.list),
-                                        childAtPosition(
-                                                withClassName(is("android.widget.FrameLayout")),
-                                                0)),
-                                0),
+        ViewInteraction noteView = onView(
+                allOf(withId(R.id.note_title), withText("Test Note for Trash"),
+                        withParent(withParent(withId(R.id.card_layout))),
                         isDisplayed()));
-        frameLayout.perform(longClick());
+        noteView.perform(longClick());
 
         ViewInteraction overflowMenuButton = onView(
                 allOf(withContentDescription("More options"),
@@ -146,16 +144,11 @@ public class move_note_to_trash {
                 .atPosition(1);
         linearLayout.perform(scrollTo(), click());
 
-        ViewInteraction frameLayout2 = onView(
-                allOf(withId(R.id.root),
-                        childAtPosition(
-                                allOf(withId(R.id.list),
-                                        childAtPosition(
-                                                withClassName(is("android.widget.FrameLayout")),
-                                                0)),
-                                0),
+        ViewInteraction textView = onView(
+                allOf(withId(R.id.note_title), withText("Test Note for Trash"),
+                        withParent(withParent(withId(R.id.card_layout))),
                         isDisplayed()));
-        frameLayout2.perform(longClick());
+        textView.check(matches(withText("Test Note for Trash")));
     }
 
     private static Matcher<View> childAtPosition(

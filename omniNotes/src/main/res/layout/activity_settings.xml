@@ -34,7 +34,7 @@
     android:background="@color/gray_bg" />
 
   <include
-    android:id="@+id/crouton_handle"
-    layout="@layout/crouton_handle" />
+      android:id="@+id/crouton_handle"
+      layout="@layout/crouton_handle" />
 
 </RelativeLayout>

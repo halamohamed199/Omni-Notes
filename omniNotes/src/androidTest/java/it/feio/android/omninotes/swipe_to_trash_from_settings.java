@@ -3,8 +3,8 @@ package it.feio.android.omninotes;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
-import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
-import static androidx.test.espresso.action.ViewActions.replaceText;
+import static androidx.test.espresso.action.ViewActions.scrollTo;
+import static androidx.test.espresso.contrib.RecyclerViewActions.actionOnItemAtPosition;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withClassName;
 import static androidx.test.espresso.matcher.ViewMatchers.withContentDescription;
@@ -30,55 +30,13 @@ import org.junit.runner.RunWith;
 
 @LargeTest
 @RunWith(AndroidJUnit4.class)
-public class add_checklist_note {
+public class swipe_to_trash_from_settings {
 
     @Rule
     public ActivityTestRule<MainActivity> mActivityTestRule = new ActivityTestRule<>(MainActivity.class);
 
     @Test
-    public void add_checklist_note() {
-        ViewInteraction viewInteraction = onView(
-                allOf(withId(R.id.fab_expand_menu_button),
-                        childAtPosition(
-                                allOf(withId(R.id.fab),
-                                        childAtPosition(
-                                                withClassName(is("android.widget.FrameLayout")),
-                                                2)),
-                                3),
-                        isDisplayed()));
-        viewInteraction.perform(click());
-
-        ViewInteraction floatingActionButton = onView(
-                allOf(withId(R.id.fab_checklist),
-                        childAtPosition(
-                                allOf(withId(R.id.fab),
-                                        childAtPosition(
-                                                withClassName(is("android.widget.FrameLayout")),
-                                                2)),
-                                1),
-                        isDisplayed()));
-        floatingActionButton.perform(click());
-
-        ViewInteraction editText = onView(
-                allOf(withId(R.id.detail_title),
-                        childAtPosition(
-                                allOf(withId(R.id.title_wrapper),
-                                        childAtPosition(
-                                                withId(R.id.detail_tile_card),
-                                                0)),
-                                1),
-                        isDisplayed()));
-        editText.perform(replaceText("test"), closeSoftKeyboard());
-
-        ViewInteraction editTextMultiLineNoEnter = onView(
-                allOf(childAtPosition(
-                        childAtPosition(
-                                withClassName(is("it.feio.android.checklistview.models.CheckListViewItem")),
-                                0),
-                        2),
-                        isDisplayed()));
-        editTextMultiLineNoEnter.perform(replaceText("note1"), closeSoftKeyboard());
-
+    public void swipe_to_trash_from_settings() {
         ViewInteraction appCompatImageButton = onView(
                 allOf(withContentDescription("drawer open"),
                         childAtPosition(
@@ -86,9 +44,55 @@ public class add_checklist_note {
                                         childAtPosition(
                                                 withClassName(is("android.widget.RelativeLayout")),
                                                 0)),
-                                0),
+                                1),
                         isDisplayed()));
         appCompatImageButton.perform(click());
+
+        ViewInteraction linearLayout = onView(
+                allOf(withId(R.id.settings_view),
+                        childAtPosition(
+                                allOf(withId(R.id.left_drawer),
+                                        childAtPosition(
+                                                withId(R.id.navigation_drawer),
+                                                0)),
+                                2)));
+        linearLayout.perform(scrollTo(), click());
+
+        ViewInteraction recyclerView = onView(
+                allOf(withId(R.id.recycler_view),
+                        childAtPosition(
+                                withId(android.R.id.list_container),
+                                0)));
+        recyclerView.perform(actionOnItemAtPosition(4, click()));
+
+        ViewInteraction recyclerView2 = onView(
+                allOf(withId(R.id.recycler_view),
+                        childAtPosition(
+                                withId(android.R.id.list_container),
+                                0)));
+        recyclerView2.perform(actionOnItemAtPosition(3, click()));
+
+        ViewInteraction appCompatImageButton2 = onView(
+                allOf(withContentDescription("Navigate up"),
+                        childAtPosition(
+                                allOf(withId(R.id.toolbar),
+                                        childAtPosition(
+                                                withClassName(is("android.widget.RelativeLayout")),
+                                                0)),
+                                1),
+                        isDisplayed()));
+        appCompatImageButton2.perform(click());
+
+        ViewInteraction appCompatImageButton3 = onView(
+                allOf(withContentDescription("Navigate up"),
+                        childAtPosition(
+                                allOf(withId(R.id.toolbar),
+                                        childAtPosition(
+                                                withClassName(is("android.widget.RelativeLayout")),
+                                                0)),
+                                1),
+                        isDisplayed()));
+        appCompatImageButton3.perform(click());
     }
 
     private static Matcher<View> childAtPosition(
